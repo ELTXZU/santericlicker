@@ -12,19 +12,22 @@ const ranks = [
     {name: "Santtu 3", img: "santtu3.png", required: 5000000},
     {name: "Santtu 4", img: "santtu4.png", required: 50000000},
     {name: "Santtu 5", img: "santtu5.png", required: 500000000},
-    {name: "Santtu 6", img: "santtu6.png", required: 999000000000000} // 999 trillion
+    {name: "Santtu 6", img: "santtu6.png", required: 999000000000000}
 ];
 
 // SHOP ITEMS
 const shopList = [
-    {name: "Santtu Finger", baseCost: 50, cps: 1},
-    {name: "Santtu Factory", baseCost: 500, cps: 10},
-    {name: "Santtu Farm", baseCost: 5000, cps: 100},
-    {name: "Santtu Planet", baseCost: 50000, cps: 1000},
-    {name: "Santtu Galaxy", baseCost: 500000, cps: 10000},
-    {name: "Santtu Universe", baseCost: 5000000, cps: 100000},
+    {name:"Mini Santtu", baseCost:100, cps:1, unlocked:false, type:"mini"},
+    {name:"Santtu Clone", baseCost:1000, cps:5, unlocked:false},
+    {name:"Santtu Tower", baseCost:10000, cps:20, unlocked:false},
+    {name:"Santtu Factory", baseCost:50000, cps:100, unlocked:false},
+    {name:"Santtu Galaxy", baseCost:500000, cps:1000, unlocked:false},
+    {name:"Santtu Wormhole", baseCost:5000000, cps:10000, unlocked:false},
+    {name:"Santtu Dimension", baseCost:50000000, cps:100000, unlocked:false},
+    {name:"Santtu Multiverse", baseCost:500000000, cps:1000000, unlocked:false},
 ];
 
+// SAVE
 function saveGame(){
     localStorage.setItem('santtus', santtus);
     localStorage.setItem('santtuPerClick', santtuPerClick);
@@ -32,11 +35,11 @@ function saveGame(){
     localStorage.setItem('prestige', prestigePoints);
 }
 
-// DISPLAY
+// UPDATE DISPLAY
 function updateDisplay(){
     document.getElementById('santtu-count').innerText = santtus.toLocaleString() + " Santtus";
 
-    // Update rank
+    // Rank
     let currentRank = ranks[0];
     for(let i=ranks.length-1;i>=0;i--){
         if(santtus >= ranks[i].required){
@@ -56,11 +59,40 @@ function showTab(tab){
     document.getElementById(tab).style.display='block';
 }
 
+// CLICK EFFECT
+function clickEffect(e){
+    const effect = document.getElementById('click-effect');
+    effect.style.left = e.clientX + "px";
+    effect.style.top = e.clientY + "px";
+    effect.style.display = 'block';
+    effect.style.opacity = 1;
+    setTimeout(()=> effect.style.opacity = 0, 200);
+    setTimeout(()=> effect.style.display='none', 300);
+}
+
 // CLICK SANTTU
-function clickSanttu(){
+function clickSanttu(e){
     santtus += santtuPerClick;
+    clickEffect(e);
+    spawnMiniSanttu();
     updateDisplay();
     saveGame();
+}
+
+// MINI SANTTU SPAWN
+function spawnMiniSanttu(){
+    let miniUpgrade = upgrades[0] || 0;
+    if(miniUpgrade < 1) return;
+    const container = document.querySelector('.santtu-container');
+    const img = document.createElement('img');
+    img.src = document.getElementById('rank-img').src;
+    img.className = 'mini-santtu';
+    const angle = Math.random() * 360;
+    const radius = 80;
+    img.style.left = 100 + radius * Math.cos(angle) + "px";
+    img.style.top = 100 + radius * Math.sin(angle) + "px";
+    container.appendChild(img);
+    setTimeout(()=> img.remove(), 5000);
 }
 
 // SHOP
@@ -70,6 +102,11 @@ function renderShop(){
     shopList.forEach((item, index)=>{
         let owned = upgrades[index] || 0;
         let cost = Math.floor(item.baseCost * Math.pow(1.15, owned));
+        
+        // Only unlock when santtus close to cost
+        if(!item.unlocked && santtus > cost * 0.5) item.unlocked = true;
+        if(!item.unlocked) return;
+        
         const btn = document.createElement('div');
         btn.className = 'shop-item' + (santtus >= cost ? '' : ' disabled');
         btn.innerHTML = `
@@ -104,24 +141,22 @@ function resetGame(){
 
 // PRESTIGE
 function prestige(){
-    if(santtus >= 1e12){ // minimum for prestige
+    if(santtus >= 1e12){
         let gained = Math.floor(Math.sqrt(santtus/1e12));
         prestigePoints += gained;
-        alert(`U prestiged and got ${gained} prestige points`);
+        alert(`U prestiged and got ${gained} prestige points 🙏`);
         santtus = 0;
-        santtuPerClick = 1 + prestigePoints; // bonus per prestige
+        santtuPerClick = 1 + prestigePoints;
         upgrades = [];
         updateDisplay();
         saveGame();
     }else{
-        alert("U need at least 1 trillion Santtus to prestige vitun köyhä kasa paskaa");
+        alert("U need at least 1 trillion Santtus to prestige 😭");
     }
 }
 
 // AUTO SAVE
-setInterval(()=>{
-    saveGame();
-}, 5000);
+setInterval(()=> saveGame(), 5000);
 
 // INIT
 updateDisplay();
