@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Santtu Clicker</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="header">
+    <h1>Santtu Clicker</h1>
+    <div id="santtu-count">0 Santtus</div>
+    <div id="rank-display">
+        <img id="rank-img" src="santtu.png" alt="Rank">
+        <span id="rank-name">Gay Lanttu</span>
+    </div>
+</div>
+
+<div class="tabs">
+    <button class="tab-btn" onclick="showTab('main')">Click</button>
+    <button class="tab-btn" onclick="showTab('shop')">Shop</button>
+    <button class="tab-btn" onclick="showTab('settings')">Settings</button>
+</div>
+
+<div id="main" class="tab">
+    <img id="santtu-btn" src="santtu.png" alt="Santtu" onclick="clickSanttu()">
+</div>
+
+<div id="shop" class="tab" style="display:none;">
+    <h2>Shop</h2>
+    <div id="shop-items"></div>
+</div>
+
+<div id="settings" class="tab" style="display:none;">
+    <h2>Settings</h2>
+    <button onclick="resetGame()">Reset Game</button>
+    <button onclick="prestige()">Prestige</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
