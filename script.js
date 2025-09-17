@@ -103,27 +103,41 @@ function renderRanks(){
     });
 }
 
-// render shop
 function renderShop(){
-    const shopDiv=document.getElementById('shop-items');
-    shopDiv.innerHTML='';
-    shopList.forEach((item,index)=>{
-        let owned = upgrades[index]||0;
-        let cost = Math.floor(item.baseCost * Math.pow(1.15,owned));
-        if(!item.unlocked && santtus >= cost*0.8) item.unlocked=true;
+    const shopDiv = document.getElementById('shop-items');
+    shopDiv.innerHTML = '';
+
+    shopList.forEach((item, index) => {
+        let owned = upgrades[index] || 0;
+        let cost = Math.floor(item.baseCost * Math.pow(1.15, owned)); // progressive cost
+
+        // unlock logic: show item when close to affording
+        if(!item.unlocked && santtus >= cost * 0.8) item.unlocked = true;
         if(!item.unlocked) return;
-        const btn=document.createElement('div');
-        btn.className='shop-item'+(santtus>=cost?'':' disabled');
-        btn.innerHTML=`<h3>${item.name}</h3><p>Cost: ${formatNumber(cost)} Santtus</p><p>Owned: ${owned}</p>`;
-        if(santtus>=cost){
-            btn.onclick=()=>{
-                santtus-=cost;
-                upgrades[index]=owned+1;
-                glowUpgrade(btn);
+
+        // create shop item div
+        const btn = document.createElement('div');
+        btn.className = 'shop-item' + (santtus >= cost ? '' : ' disabled');
+
+        // add name, description, cost, owned
+        btn.innerHTML = `
+            <h3>${item.name}</h3>
+            <p>${item.description}</p>
+            <p>Cost: ${formatNumber(cost)} Santtus</p>
+            <p>Owned: ${owned}</p>
+        `;
+
+        // buy logic
+        if(santtus >= cost){
+            btn.onclick = () => {
+                santtus -= cost;
+                upgrades[index] = owned + 1;
+                glowUpgrade(btn); // optional visual effect
                 updateDisplay();
                 saveGame();
             }
         }
+
         shopDiv.appendChild(btn);
     });
 }
