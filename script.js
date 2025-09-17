@@ -166,11 +166,10 @@ function clickSanttu(e){
     saveGame();
 }
 
-// bounce effect
 function bounceSanttu(){
-    const btn=document.getElementById('santtu-btn');
+    const btn = document.getElementById('santtu-btn');
     btn.style.transform='scale(1.05)';
-    setTimeout(()=>{btn.style.transform='scale(1)';},100);
+    setTimeout(()=>{btn.style.transform='scale(1)';},150);
 }
 
 function updateMiniSanttu(){
