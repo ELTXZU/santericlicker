@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Santtu Clicker Ultra Deluxe</title>
+<title>Santtu Clicker</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div id="app">
     <header>
-        <h1>Santtu Clicker Ultra Deluxe</h1>
+        <h1>Santtu Clicker</h1>
         <div id="santtu-count">0 Santtus</div>
     </header>
 
@@ -22,7 +22,7 @@
 
     <main>
         <section id="main" class="tab active-tab">
-            <div class="santtu-container">
+            <div class="santtu-circle">
                 <img id="santtu-btn" src="santtu.png" alt="Santtu">
             </div>
             <div id="mini-count" class="mini-count"></div>
@@ -50,22 +50,26 @@
 
 <script src="script.js"></script>
 <script>
-    // --- tab click binding ---
-    document.querySelectorAll('.tab-btn').forEach(btn=>{
-        btn.addEventListener('click', ()=>{
-            document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active-tab'));
-            document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-            document.getElementById(btn.dataset.tab).classList.add('active-tab');
-            btn.classList.add('active');
-        });
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+        document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active-tab'));
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        document.getElementById(btn.dataset.tab).classList.add('active-tab');
+        btn.classList.add('active');
     });
+});
 
-    // --- santtu click ---
-    document.getElementById('santtu-btn').addEventListener('click', clickSanttu);
+// click santtu bounce
+const santtuBtn = document.getElementById('santtu-btn');
+santtuBtn.addEventListener('click', ()=>{
+    santtuBtn.classList.add('bounce');
+    setTimeout(()=>{ santtuBtn.classList.remove('bounce'); }, 200);
+    clickSanttu();
+});
 
-    // --- reset / prestige ---
-    document.getElementById('reset-btn').addEventListener('click', resetGame);
-    document.getElementById('prestige-btn').addEventListener('click', prestige);
+// reset / prestige
+document.getElementById('reset-btn').addEventListener('click', resetGame);
+document.getElementById('prestige-btn').addEventListener('click', prestige);
 </script>
 </body>
 </html>
