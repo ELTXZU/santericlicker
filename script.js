@@ -1,26 +1,19 @@
-// ==========================
-// GAME DATA
-// ==========================
 let santtus = parseFloat(localStorage.getItem('santtus'))||0;
-let santtuPerClick = 3; // early game easier
+let santtuPerClick = 2; // fixed
 let upgrades = JSON.parse(localStorage.getItem('upgrades'))||[];
 let prestigePoints = parseInt(localStorage.getItem('prestige'))||0;
 
-// ==========================
-// RANKS
-// ==========================
+// ranks
 const ranks=[
   {name:"Gay Lanttu", img:"santtu.png", required:0},
   {name:"Based Santtu", img:"santtu1.png", required:10000},
   {name:"Lanttu God", img:"santtu2.png", required:500000},
   {name:"Mega Lanttu", img:"santtu3.png", required:1e9},
   {name:"Ultra Lanttu", img:"santtu4.png", required:1e12},
-  {name:"Lanttu Overlord", img:"santtu5.png", required:1e36} // vigintillion
+  {name:"Lanttu Overlord", img:"santtu5.png", required:1e36}
 ];
 
-// ==========================
-// SHOP UPGRADES
-// ==========================
+// shop
 const shopList=[];
 const prefixes=["Mini","Mega","Ultra","Quantum","Ludicrous","Galactic","Infinite","Santtu","Lanttu"];
 const suffixes=["Factory","Machine","Wormhole","Dimension","Overload","Clone","Multiplier","Blast","Frenzy","Portal"];
@@ -28,22 +21,17 @@ for(let i=0;i<100;i++){
     const name = prefixes[i%prefixes.length]+" "+suffixes[i%suffixes.length]+" #"+(i+1);
     const baseCost = Math.floor(Math.pow(10, i*0.5+2));
     const cps = Math.floor(Math.pow(2, i*0.5));
-    shopList.push({name:name, baseCost:baseCost, cps:cps, unlocked:i<3?true:false, feature:i%5});
+    shopList.push({name:name, baseCost:baseCost, cps:cps, unlocked:i<3?true:false});
 }
 
-// ==========================
-// SAVE / LOAD
-// ==========================
+// save/load
 function saveGame(){
     localStorage.setItem('santtus',santtus);
-    localStorage.setItem('santtuPerClick',santtuPerClick);
     localStorage.setItem('upgrades',JSON.stringify(upgrades));
     localStorage.setItem('prestige',prestigePoints);
 }
 
-// ==========================
-// DISPLAY
-// ==========================
+// display
 function updateDisplay(){
     document.getElementById('santtu-count').innerText=formatNumber(santtus)+" Santtus";
     updateMiniSanttu();
@@ -51,33 +39,27 @@ function updateDisplay(){
     renderRanks();
 }
 
-// ==========================
-// TABS
-// ==========================
+// tabs
 function showTab(tab){
     document.querySelectorAll('.tab').forEach(t=>t.style.display='none');
     document.getElementById(tab).style.display='block';
 }
 
-// ==========================
-// CLICK EFFECT
-// ==========================
+// click effect
 function clickEffect(e,value){
-    const effect=document.getElementById('click-effect');
-    effect.innerText = "+"+value;
+    const effect=document.createElement('div');
+    effect.innerText="+"+value;
+    effect.style.position="absolute";
+    effect.style.color="#ffb347";
     effect.style.left=e.clientX+'px';
     effect.style.top=e.clientY+'px';
-    effect.style.display='block';
-    effect.style.transform="translate(-50%,-50%) scale(1.2)";
-    setTimeout(()=>{
-        effect.style.display='none';
-        effect.style.transform="translate(-50%,-50%) scale(1)";
-    },300);
+    effect.style.fontWeight="bold";
+    effect.style.transform="translate(-50%,-50%)";
+    document.body.appendChild(effect);
+    setTimeout(()=>{effect.remove();},800);
 }
 
-// ==========================
-// CLICK SANTTU
-// ==========================
+// click santtu
 function clickSanttu(e){
     let boost = 1 + 0.01*prestigePoints;
     santtus += santtuPerClick*boost;
@@ -87,18 +69,14 @@ function clickSanttu(e){
     saveGame();
 }
 
-// ==========================
-// BOUNCE EFFECT
-// ==========================
+// bounce effect
 function bounceSanttu(){
     const santtu=document.getElementById('santtu-btn');
     santtu.style.transform="scale(1.1)";
     setTimeout(()=>{santtu.style.transform="scale(1)";},100);
 }
 
-// ==========================
-// MINI SANTTU ORBIT
-// ==========================
+// mini santtu orbit
 function updateMiniSanttu(){
     const container=document.querySelector('.santtu-container');
     container.innerHTML='<img id="santtu-btn" src="'+getCurrentRank().img+'" onclick="clickSanttu(event)">';
@@ -120,9 +98,7 @@ function updateMiniSanttu(){
     }
 }
 
-// ==========================
-// CURRENT RANK
-// ==========================
+// current rank
 function getCurrentRank(){
     let currentRank=ranks[0];
     for(let i=ranks.length-1;i>=0;i--){
@@ -134,9 +110,7 @@ function getCurrentRank(){
     return currentRank;
 }
 
-// ==========================
-// SHOP RENDER
-// ==========================
+// render shop
 function renderShop(){
     const shopDiv=document.getElementById('shop-items');
     shopDiv.innerHTML='';
@@ -161,17 +135,13 @@ function renderShop(){
     });
 }
 
-// ==========================
-// GLOW EFFECT
-// ==========================
+// glow upgrade
 function glowUpgrade(btn){
     btn.style.boxShadow="0 0 20px #ffb347";
     setTimeout(()=>{btn.style.boxShadow="0 4px 10px rgba(0,0,0,0.5)";},500);
 }
 
-// ==========================
-// RANKS RENDER
-// ==========================
+// ranks render
 function renderRanks(){
     const div=document.getElementById('ranks-list');
     div.innerHTML='';
@@ -184,9 +154,7 @@ function renderRanks(){
     });
 }
 
-// ==========================
-// AUTO CLICKER
-// ==========================
+// auto clicker
 setInterval(()=>{
     let autoClicks=0;
     for(let i=0;i<upgrades.length;i++){
@@ -198,9 +166,7 @@ setInterval(()=>{
     saveGame();
 },100);
 
-// ==========================
-// RESET / PRESTIGE
-// ==========================
+// reset / prestige
 function resetGame(){
     if(confirm("Are u sure u wanna reset?")){
         santtus=0;
@@ -209,7 +175,6 @@ function resetGame(){
         saveGame();
     }
 }
-
 function prestige(){
     if(santtus>=1e12){
         let gained=Math.floor(Math.sqrt(santtus/1e12));
@@ -222,9 +187,7 @@ function prestige(){
     }else alert("Need at least 1 trillion Santtus 😭");
 }
 
-// ==========================
-// NUMBER FORMATTING
-// ==========================
+// number formatting
 function formatNumber(num){
     const suffixes = ["","K","M","B","T","Qa","Qi","Sx","Sp","Oc","No","Dc","Ud","Dd","Td","Qad","Qid","Sxd","Spd","Ocd","Nod","Vig"];
     let i=0;
@@ -235,7 +198,5 @@ function formatNumber(num){
     return num.toFixed(2)+suffixes[i];
 }
 
-// ==========================
-// INIT
-// ==========================
+// init
 updateDisplay();
