@@ -166,9 +166,9 @@ function clickSanttu(){
 }
 
 function bounceSanttu(){
-    const btn = document.getElementById('santtu-btn');
-    btn.style.transform='scale(1.05)';
-    setTimeout(()=>{btn.style.transform='scale(1)';},150);
+    const circle = document.querySelector('.santtu-circle');
+    circle.style.animation = "clickBounce 0.3s ease";
+    setTimeout(()=>{ circle.style.animation = "spin 10s linear infinite"; },300);
 }
 
 // === render shop ===
