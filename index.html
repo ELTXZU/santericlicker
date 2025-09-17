@@ -3,22 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Santtu Clicker Deluxe</title>
+<title>Santtu Clicker Deluxe 3.0</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="header">
-    <h1>Santtu Clicker Deluxe</h1>
+    <h1>Santtu Clicker Deluxe 3.0</h1>
     <div id="santtu-count">0 Santtus</div>
-    <div id="rank-display">
-        <img id="rank-img" src="santtu.png" alt="Rank">
-        <span id="rank-name">Gay Lanttu</span>
-    </div>
 </div>
 
 <div class="tabs">
     <button class="tab-btn" onclick="showTab('main')">Click</button>
     <button class="tab-btn" onclick="showTab('shop')">Shop</button>
+    <button class="tab-btn" onclick="showTab('ranks')">Ranks</button>
     <button class="tab-btn" onclick="showTab('settings')">Settings</button>
 </div>
 
@@ -33,6 +30,11 @@
     <div id="shop-items"></div>
 </div>
 
+<div id="ranks" class="tab" style="display:none;">
+    <h2>Ranks</h2>
+    <div id="ranks-list"></div>
+</div>
+
 <div id="settings" class="tab" style="display:none;">
     <h2>Settings</h2>
     <button onclick="resetGame()">Reset Game</button>
@@ -40,6 +42,7 @@
 </div>
 
 <div id="click-effect"></div>
+<div id="watermark">made by eltxzu</div>
 
 <script src="script.js"></script>
 </body>
