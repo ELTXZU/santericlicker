@@ -1,127 +1,178 @@
-/* reset & base */
-* {margin:0; padding:0; box-sizing:border-box;}
+/* === general styles === */
 body {
+    margin:0;
+    padding:0;
     font-family: Arial, sans-serif;
-    background: #111;
-    color: #eee;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+    background:#111;
+    color:#eee;
 }
 
-/* header */
-.header {
-    text-align: center;
-    padding: 20px 0;
-}
-.header h1 {
-    font-size: 2.2em;
-    color: #f0f0f0;
-    text-shadow: 0 0 10px #ff00ff;
-}
-#santtu-count {
-    font-size: 1.2em;
-    margin-top: 5px;
-    color: #ff77ff;
+header, .header {
+    text-align:center;
+    padding:10px;
 }
 
-/* tabs */
+h1, h2, h3 {
+    margin:5px 0;
+}
+
+/* === tabs === */
 .tabs {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-top:20px;
 }
+
 .tab-btn {
-    padding: 10px 25px;
-    cursor: pointer;
-    background: #222;
-    border-radius: 10px;
-    border: none;
-    color: #eee;
-    font-weight: bold;
-    transition: 0.2s;
+    padding:10px 20px;
+    cursor:pointer;
+    margin:5px;
+    background:#222;
+    border-radius:5px;
+    flex:1 1 auto;
+    min-width:100px;
+    text-align:center;
+    transition: background 0.2s;
 }
+
 .tab-btn:hover {
-    background: #333;
+    background:#333;
 }
+
 .tab-btn.active {
-    background: #ff00ff;
-    color: #111;
+    background:#444;
 }
 
-/* tab content */
+/* === tab content === */
 .tab {
-    display: none;
-    margin-top: 30px;
-    width: 90%;
-    max-width: 600px;
-    text-align: center;
-}
-.tab.active-tab {
-    display: block;
+    margin:10px;
 }
 
-/* santtu container */
+/* === santtu container === */
 .santtu-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin-top:20px;
+    width:100%;
 }
+
 #santtu-btn {
-    width: 150px;
-    cursor: pointer;
-    animation: spin 20s linear infinite;
+    max-width:80%;
+    height:auto;
+    cursor:pointer;
+    animation:spin 20s linear infinite;
     transition: transform 0.1s;
-    border-radius: 50%;
-    box-shadow: 0 0 20px #ff00ff;
 }
+
+/* === mini santtus === */
 .mini-santtu {
-    width: 35px;
-    margin: 3px;
+    width:20px;
+    margin:2px;
     transition: transform 0.2s;
 }
 
-/* shop & ranks */
-.shop-item, .rank-item {
-    background: #222;
-    margin: 8px 0;
-    padding: 12px;
-    border-radius: 10px;
-    transition: transform 0.15s, background 0.2s;
-    display: flex;
-    align-items: center;
+.mini-row {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-top:5px;
 }
-.shop-item:hover:not(.disabled), .rank-item:hover {
-    transform: scale(1.05);
-    background: #333;
+
+/* === shop items === */
+.shop-item {
+    background:#222;
+    margin:5px auto;
+    padding:10px;
+    border-radius:5px;
+    transition: transform 0.1s, box-shadow 0.2s;
+    width:90%;
+    max-width:400px;
 }
+
 .shop-item.disabled {
-    opacity: 0.5;
-    pointer-events: none;
+    opacity:0.5;
+    pointer-events:none;
 }
-.rank-item img {
-    width: 45px;
-    margin-right: 12px;
+
+.shop-item:hover:not(.disabled) {
+    transform:scale(1.03);
+    box-shadow:0 0 10px #ffb347;
 }
+
+/* === ranks === */
+.rank-item {
+    display:flex;
+    align-items:center;
+    margin:5px auto;
+    padding:5px;
+    border-radius:5px;
+    background:#222;
+    transition: transform 0.1s, background 0.2s;
+    width:90%;
+    max-width:400px;
+}
+
 .rank-item.current {
-    background: #ff00ff;
-    color: #111;
+    background:#444;
 }
 
-/* watermark */
+.rank-item img {
+    width:40px;
+    margin-right:10px;
+}
+
+.rank-item div {
+    margin-left:auto;
+}
+
+/* === settings buttons === */
+#settings button {
+    margin:5px;
+    padding:10px 20px;
+    cursor:pointer;
+    background:#222;
+    border-radius:5px;
+    transition: background 0.2s;
+}
+
+#settings button:hover {
+    background:#333;
+}
+
+/* === watermark === */
 #watermark {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    color: #888;
-    font-size: 0.85em;
-    font-style: italic;
+    position:fixed;
+    bottom:5px;
+    right:5px;
+    color:#888;
+    font-size:0.8em;
 }
 
-/* spin animation */
+/* === animations === */
 @keyframes spin {
-    from {transform: rotate(0deg);}
-    to {transform: rotate(360deg);}
+    from { transform:rotate(0deg); }
+    to { transform:rotate(360deg); }
+}
+
+/* === responsive tweaks === */
+@media screen and (max-width:600px) {
+    .tab-btn {
+        min-width:80px;
+        padding:8px 12px;
+    }
+
+    #santtu-btn {
+        max-width:90%;
+    }
+
+    .mini-santtu {
+        width:16px;
+        margin:1px;
+    }
+
+    .shop-item, .rank-item {
+        width:95%;
+    }
 }
