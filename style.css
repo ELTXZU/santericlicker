@@ -1,70 +1,117 @@
+/* === global === */
+* {box-sizing:border-box; margin:0; padding:0;}
 body {
-    margin:0;
-    padding:0;
     font-family: Arial, sans-serif;
-    background: #111;
-    color: #eee;
+    background:#111;
+    color:#eee;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-height:100vh;
+    width:100%;
+}
+
+header {
+    text-align:center;
+    padding:15px;
+}
+
+h1 {
+    font-size:1.5rem;
+}
+
+#santtu-count {
+    margin-top:5px;
+    font-size:1.2rem;
+}
+
+/* === tabs === */
+.tabs {
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:10px 0;
+    gap:5px;
+}
+
+.tab-btn {
+    padding:10px 20px;
+    background:#222;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    flex:1 1 20%;
+    text-align:center;
+    transition:background 0.2s;
+}
+
+.tab-btn.active {
+    background:#444;
+}
+
+/* === main container === */
+main {
+    width:100%;
+    max-width:480px;
+    flex:1;
     display:flex;
     flex-direction:column;
     align-items:center;
 }
 
-header {text-align:center; padding:10px;}
-
-.tabs {
-    display:flex;
-    justify-content:center;
-    margin:10px 0;
-    flex-wrap:wrap;
+/* === tab sections === */
+.tab {
+    display:none;
+    width:100%;
 }
 
-.tab-btn {
-    padding:10px 15px;
-    margin:2px;
-    cursor:pointer;
-    background:#222;
-    border:none;
-    border-radius:5px;
-    color:#eee;
-    transition:0.2s;
-}
-.tab-btn.active {background:#444;}
-.tab-btn:hover {background:#333;}
-
-.tab {display:none;}
-.tab.active-tab {display:block; width:100%; max-width:450px; margin:0 auto;}
-
-.santtu-circle {
-    position: relative;
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    border: 3px solid #444;
-    margin: 20px auto;
+.tab.active-tab {
     display:flex;
+    flex-direction:column;
     align-items:center;
-    justify-content:center;
+}
+
+/* === santtu container === */
+.santtu-container {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin:10px 0;
 }
 
 #santtu-btn {
-    width: 80px;
-    height: 80px;
-    animation: spin 15s linear infinite;
+    width:120px;
+    max-width:40vw;
     cursor:pointer;
-    transition: transform 0.1s;
+    animation:spin 30s linear infinite;
+    transition:transform 0.1s;
 }
 
-/* bounce animation */
-@keyframes bounceAnim {
-    0% {transform: scale(1);}
-    30% {transform: scale(1.2);}
-    50% {transform: scale(0.9);}
-    70% {transform: scale(1.1);}
-    100% {transform: scale(1);}
+/* mini santtus */
+.mini-row {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-top:5px;
 }
-.bounce {animation: bounceAnim 0.2s;}
 
-.mini-count {text-align:center; margin-top:5px;}
+.mini-santtu {
+    width:25px;
+    margin:2px;
+    transition:transform 0.2s;
+}
+
+#mini-count {
+    margin-top:5px;
+    font-size:0.9rem;
+}
+
+/* === shop items === */
+#shop-items {
+    display:flex;
+    flex-direction:column;
+    width:95%;
+}
 
 .shop-item {
     background:#222;
@@ -72,7 +119,6 @@ header {text-align:center; padding:10px;}
     padding:10px;
     border-radius:5px;
     transition: transform 0.1s, box-shadow 0.2s;
-    transform-origin: center; /* add this */
 }
 
 .shop-item.disabled {
@@ -85,11 +131,79 @@ header {text-align:center; padding:10px;}
     box-shadow:0 0 10px #ffb347;
 }
 
-.rank-item {display:flex; align-items:center;}
-.rank-item.current {background:#444;}
-.rank-item img {width:40px; margin-right:10px;}
-.rank-item div {margin-left:auto;}
+/* === ranks === */
+#ranks-list {
+    width:95%;
+    display:flex;
+    flex-direction:column;
+}
 
-#watermark {position:fixed; bottom:5px; right:5px; color:#888; font-size:0.8em;}
+.rank-item {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin:5px 0;
+    padding:5px 10px;
+    border-radius:5px;
+    background:#222;
+    transition: transform 0.1s;
+}
 
-@keyframes spin {from{transform:rotate(0deg);} to{transform:rotate(360deg);}}
+.rank-item.current {
+    background:#444;
+}
+
+.rank-item img {
+    width:40px;
+    height:40px;
+    margin-right:10px;
+    border-radius:50%;
+}
+
+/* === settings buttons === */
+#settings button {
+    padding:10px 20px;
+    margin:5px;
+    background:#222;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    width:90%;
+    max-width:300px;
+    text-align:center;
+    transition:background 0.2s, transform 0.1s;
+}
+
+#settings button:hover{
+    background:#444;
+    transform:scale(1.05);
+}
+
+/* === watermark === */
+#watermark {
+    position:fixed;
+    bottom:5px;
+    right:5px;
+    color:#888;
+    font-size:0.8em;
+}
+
+/* === animations === */
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}
+
+/* === responsive === */
+@media(max-width:480px){
+    .tab-btn {
+        flex:1 1 40%;
+        font-size:0.9rem;
+    }
+    #santtu-btn {
+        max-width:50vw;
+    }
+    .mini-santtu {
+        width:20px;
+    }
+}
