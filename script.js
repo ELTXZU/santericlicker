@@ -1,7 +1,8 @@
-let santtus = parseFloat(localStorage.getItem('santtus'))||0;
+// === santtu clicker vars ===
+let santtus = parseFloat(localStorage.getItem('santtus')) || 0;
 let santtuPerClick = 3;
-let upgrades = JSON.parse(localStorage.getItem('upgrades'))||[];
-let prestigePoints = parseInt(localStorage.getItem('prestige'))||0;
+let upgrades = JSON.parse(localStorage.getItem('upgrades')) || [];
+let prestigePoints = parseInt(localStorage.getItem('prestige')) || 0;
 
 // ranks
 const ranks=[
@@ -65,6 +66,7 @@ const shopList = [
   {name:"Final Santtu God", baseCost:9.99e33, clickBonus:5e7, autoBonus:1e14, description:"Adds 50,000,000 per click and 100,000,000,000,000 auto santtus per second."}
 ];
 
+// === localStorage save ===
 function saveGame(){
     localStorage.setItem('santtus', santtus);
     localStorage.setItem('upgrades', JSON.stringify(upgrades));
@@ -72,94 +74,69 @@ function saveGame(){
     localStorage.setItem('lastActive', Date.now());
 }
 
-// tabs
-function showTab(tab){
-    document.querySelectorAll('.tab').forEach(t=>t.style.display='none');
-    document.getElementById(tab).style.display='block';
+// === tab switching ===
+function showTab(tabId, btn){
+    document.querySelectorAll('.tab').forEach(t => t.style.display='none');
+    document.getElementById(tabId).style.display='block';
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
 }
 
-// current rank
+// === current rank ===
 function getCurrentRank(){
-    let currentRank=ranks[0];
-    for(let i=ranks.length-1;i>=0;i--){
-        if(santtus>=ranks[i].required){
-            currentRank=ranks[i];
+    let rank = ranks[0];
+    for(let i=ranks.length-1; i>=0; i--){
+        if(santtus >= ranks[i].required){
+            rank = ranks[i];
             break;
         }
     }
-    return currentRank;
+    return rank;
 }
 
-// render ranks
-function renderRanks(){
-    const div=document.getElementById('ranks-list');
-    div.innerHTML='';
-    ranks.forEach(rank=>{
-        let progress = rank.required === 0 ? 100 : Math.min(100, (santtus/rank.required)*100);
-        const item=document.createElement('div');
-        item.className='rank-item'+(getCurrentRank().name===rank.name?' current':'');
-        item.innerHTML=`<img src="${rank.img}"><span>${rank.name}</span><div>${Math.floor(progress)}%</div>`;
-        div.appendChild(item);
-    });
+// === update santtu display & mini santtus ===
+function updateMiniSanttu(){
+    const container = document.querySelector('.santtu-container');
+    container.innerHTML = '';
+
+    const rank = getCurrentRank();
+    const mainImg = document.createElement('img');
+    mainImg.id = "santtu-btn";
+    mainImg.src = rank.img;
+    mainImg.onclick = clickSanttu;
+    mainImg.style.animation = "spin 20s linear infinite";
+    container.appendChild(mainImg);
+
+    const miniCount = upgrades[0] || 0;
+    const maxDisplay = 50; // cap mini santtus for performance
+    const displayCount = Math.min(miniCount, maxDisplay);
+
+    const miniDiv = document.createElement('div');
+    miniDiv.style.display = 'flex';
+    miniDiv.style.flexWrap = 'wrap';
+    miniDiv.style.justifyContent = 'center';
+    for(let i=0; i<displayCount; i++){
+        const mini = document.createElement('img');
+        mini.src = rank.img;
+        mini.className='mini-santtu';
+        miniDiv.appendChild(mini);
+    }
+    if(miniCount>0) container.appendChild(miniDiv);
+    document.getElementById('mini-count').innerText = `Mini Santtus: ${miniCount}`;
 }
 
-function renderShop(){
-    const shopDiv = document.getElementById('shop-items');
-    shopDiv.innerHTML = '';
-
-    shopList.forEach((item, index) => {
-        let owned = upgrades[index] || 0;
-        let cost = Math.floor(item.baseCost * Math.pow(1.15, owned)); // progressive cost
-
-        // unlock logic: show item when close to affording
-        if(!item.unlocked && santtus >= cost * 0.8) item.unlocked = true;
-        if(!item.unlocked) return;
-
-        // create shop item div
-        const btn = document.createElement('div');
-        btn.className = 'shop-item' + (santtus >= cost ? '' : ' disabled');
-
-        // add name, description, cost, owned
-        btn.innerHTML = `
-            <h3>${item.name}</h3>
-            <p>${item.description}</p>
-            <p>Cost: ${formatNumber(cost)} Santtus</p>
-            <p>Owned: ${owned}</p>
-        `;
-
-        // buy logic
-        if(santtus >= cost){
-            btn.onclick = () => {
-                santtus -= cost;
-                upgrades[index] = owned + 1;
-                glowUpgrade(btn); // optional visual effect
-                updateDisplay();
-                saveGame();
-            }
-        }
-
-        shopDiv.appendChild(btn);
-    });
-}
-
-// glow upgrade
-function glowUpgrade(btn){
-    btn.style.boxShadow="0 0 20px #ffb347";
-    setTimeout(()=>{btn.style.boxShadow="0 4px 10px rgba(0,0,0,0.5)";},500);
-}
-
-// click santtu
+// === click santtu ===
 function getClickBoost(){
-    let boost=1;
-    for(let i=0;i<upgrades.length;i++){
-        boost += (upgrades[i]||0)*(shopList[i]?.clickBonus||0);
+    let boost = 1;
+    for(let i=0; i<upgrades.length; i++){
+        boost += (upgrades[i]||0) * (shopList[i]?.clickBonus||0);
     }
     return boost;
 }
 
-function clickSanttu(e){
-    let boost = 1 + 0.01*prestigePoints;
-    let clickBoost = getClickBoost();
+function clickSanttu(){
+    const boost = 1 + 0.01*prestigePoints;
+    const clickBoost = getClickBoost();
     santtus += santtuPerClick * boost * clickBoost;
     bounceSanttu();
     updateDisplay();
@@ -172,65 +149,70 @@ function bounceSanttu(){
     setTimeout(()=>{btn.style.transform='scale(1)';},150);
 }
 
-function updateMiniSanttu(){
-    const container=document.querySelector('.santtu-container');
-    const currentRank = getCurrentRank();
+// === render shop ===
+function renderShop(){
+    const shopDiv = document.getElementById('shop-items');
+    shopDiv.innerHTML = '';
 
-    container.innerHTML=''; // clear container first
-
-    // main santtu image
-    const mainImg = document.createElement('img');
-    mainImg.id = "santtu-btn";
-    mainImg.src = currentRank.img; // update to current rank image
-    mainImg.onclick = clickSanttu;
-    mainImg.style.animation = "slowspin 30s linear infinite";
-    container.appendChild(mainImg);
-
-    // mini santtus rows
-    let miniCount = upgrades[0]||0; // first upgrade controls mini santtus
-    const maxPerRow = 8;
-    const maxRows = 10;
-    let rowCount = Math.min(maxRows, Math.ceil(miniCount/maxPerRow));
-
-    for(let r=0; r<rowCount; r++){
-        const rowDiv = document.createElement('div');
-        rowDiv.style.display='flex';
-        rowDiv.style.justifyContent='center';
-        rowDiv.style.marginTop='5px';
-
-        for(let i=0; i<Math.min(maxPerRow, miniCount - r*maxPerRow); i++){
-            const mini = document.createElement('img');
-            mini.src = currentRank.img; // mini santtus follow current rank
-            mini.className='mini-santtu';
-            rowDiv.appendChild(mini);
+    shopList.forEach((item, index)=>{
+        let owned = upgrades[index] || 0;
+        let cost = Math.floor(item.baseCost * Math.pow(1.15, owned));
+        const btn = document.createElement('div');
+        btn.className = 'shop-item' + (santtus>=cost ? '' : ' disabled');
+        btn.innerHTML = `<h3>${item.name}</h3><p>${item.description}</p><p>Cost: ${formatNumber(cost)}</p><p>Owned: ${owned}</p>`;
+        if(santtus>=cost){
+            btn.onclick = ()=>{
+                santtus -= cost;
+                upgrades[index] = owned+1;
+                glowUpgrade(btn);
+                updateDisplay();
+                saveGame();
+            }
         }
-        container.appendChild(rowDiv);
-    }
-
-    document.getElementById('mini-count').innerText = "Mini Santtus: " + miniCount;
+        shopDiv.appendChild(btn);
+    });
 }
 
-// auto santtus
+function glowUpgrade(btn){
+    btn.style.boxShadow = "0 0 20px #ffb347";
+    setTimeout(()=>{btn.style.boxShadow="0 4px 10px rgba(0,0,0,0.5)";},500);
+}
+
+// === render ranks ===
+function renderRanks(){
+    const div = document.getElementById('ranks-list');
+    div.innerHTML = '';
+    const currentRank = getCurrentRank();
+    ranks.forEach(rank=>{
+        const progress = rank.required === 0 ? 100 : Math.min(100, (santtus/rank.required)*100);
+        const item = document.createElement('div');
+        item.className = 'rank-item' + (currentRank.name===rank.name ? ' current' : '');
+        item.innerHTML = `<img src="${rank.img}"><span>${rank.name}</span><div>${Math.floor(progress)}%</div>`;
+        div.appendChild(item);
+    });
+}
+
+// === auto santtus ===
 setInterval(()=>{
-    let autoClicks=0;
+    let autoClicks = 0;
     for(let i=0;i<upgrades.length;i++){
-        autoClicks += (upgrades[i]||0)*(shopList[i]?.autoBonus||0);
+        autoClicks += (upgrades[i]||0) * (shopList[i]?.autoBonus||0);
     }
-    let boost = 1 + 0.01*prestigePoints;
-    santtus += autoClicks/10 * boost;
+    const boost = 1 + 0.01*prestigePoints;
+    santtus += autoClicks / 10 * boost;
     updateDisplay();
     saveGame();
 },100);
 
-// update display
+// === update display ===
 function updateDisplay(){
-    document.getElementById('santtu-count').innerText = formatNumber(santtus)+" Santtus";
+    document.getElementById('santtu-count').innerText = formatNumber(santtus) + " Santtus";
     updateMiniSanttu();
     renderShop();
     renderRanks();
 }
 
-// reset / prestige
+// === reset / prestige ===
 function resetGame(){
     if(confirm("Are u sure u wanna reset?")){
         santtus=0;
@@ -242,59 +224,48 @@ function resetGame(){
 
 function prestige(){
     if(santtus>=1e12){
-        let gained=Math.floor(Math.sqrt(santtus/1e12));
-        prestigePoints+=gained;
+        let gained = Math.floor(Math.sqrt(santtus/1e12));
+        prestigePoints += gained;
         alert(`U prestiged and got ${gained} prestige points 🙏`);
-        santtus=0;
-        upgrades=[];
+        santtus = 0;
+        upgrades = [];
         updateDisplay();
         saveGame();
     }else alert("Need at least 1 trillion Santtus 😭");
 }
 
-// number formatting
+// === number formatting ===
 function formatNumber(num){
-    const suffixes = ["","K","M","B","T","Qa","Qi","Sx","Sp","Oc","No","Dc","Ud","Dd","Td","Qad","Qid","Sxd","Spd","Ocd","Nod","Vig"];
+    const suffixes = ["","K","M","B","T","Qa","Qi","Sx","Sp","Oc","No","Dc"];
     let i=0;
-    while(num >= 1000 && i<suffixes.length-1){
+    while(num>=1000 && i<suffixes.length-1){
         num/=1000;
         i++;
     }
     return num.toFixed(2)+suffixes[i];
 }
 
+// === offline progress ===
 function loadOfflineProgress(){
     const last = parseInt(localStorage.getItem('lastActive')) || Date.now();
     const now = Date.now();
-    let elapsed = (now - last) / 1000; // seconds offline
-    const maxSeconds = 24 * 60 * 60;
+    let elapsed = (now - last) / 1000; // seconds
+    const maxSeconds = 24*60*60;
     if(elapsed > maxSeconds) elapsed = maxSeconds;
 
-    // total auto santtus per second
     let autoPerSecond = 0;
     for(let i=0;i<upgrades.length;i++){
         autoPerSecond += (upgrades[i]||0)*(shopList[i]?.autoBonus||0);
     }
-    let boost = 1 + 0.01*prestigePoints;
+    const boost = 1 + 0.01*prestigePoints;
     const totalGain = autoPerSecond * boost * elapsed;
 
-    if(totalGain > 0){
-        let gainLeft = totalGain;
-        const increment = totalGain/100; // 100 steps
-        const interval = setInterval(()=>{
-            if(gainLeft <= 0){
-                clearInterval(interval);
-                saveGame();
-                return;
-            }
-            const step = Math.min(increment, gainLeft);
-            santtus += step;
-            gainLeft -= step;
-            updateDisplay();
-        },20); // update every 20ms for smooth animation
+    if(totalGain>0){
+        alert(`💀 You gained ${formatNumber(totalGain)} Santtus while offline!`);
+        santtus += totalGain;
     }
 }
 
-// init
+// === init ===
 loadOfflineProgress();
 updateDisplay();
