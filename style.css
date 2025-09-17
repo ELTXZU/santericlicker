@@ -1,52 +1,74 @@
-/* === general styles === */
+/* === global === */
+* {box-sizing:border-box; margin:0; padding:0;}
 body {
-    margin:0;
-    padding:0;
     font-family: Arial, sans-serif;
     background:#111;
     color:#eee;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-height:100vh;
+    width:100%;
 }
 
-header, .header {
+header {
     text-align:center;
-    padding:10px;
+    padding:15px;
 }
 
-h1, h2, h3 {
-    margin:5px 0;
+h1 {
+    font-size:1.5rem;
+}
+
+#santtu-count {
+    margin-top:5px;
+    font-size:1.2rem;
 }
 
 /* === tabs === */
 .tabs {
     display:flex;
-    flex-wrap:wrap;
     justify-content:center;
-    margin-top:20px;
+    flex-wrap:wrap;
+    margin:10px 0;
+    gap:5px;
 }
 
 .tab-btn {
     padding:10px 20px;
-    cursor:pointer;
-    margin:5px;
     background:#222;
+    border:none;
     border-radius:5px;
-    flex:1 1 auto;
-    min-width:100px;
+    cursor:pointer;
+    flex:1 1 20%;
     text-align:center;
-    transition: background 0.2s;
-}
-
-.tab-btn:hover {
-    background:#333;
+    transition:background 0.2s;
 }
 
 .tab-btn.active {
     background:#444;
 }
 
-/* === tab content === */
+/* === main container === */
+main {
+    width:100%;
+    max-width:480px;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+/* === tab sections === */
 .tab {
-    margin:10px;
+    display:none;
+    width:100%;
+}
+
+.tab.active-tab {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
 }
 
 /* === santtu container === */
@@ -54,25 +76,18 @@ h1, h2, h3 {
     display:flex;
     flex-direction:column;
     align-items:center;
-    margin-top:20px;
-    width:100%;
+    margin:10px 0;
 }
 
 #santtu-btn {
-    max-width:80%;
-    height:auto;
+    width:120px;
+    max-width:40vw;
     cursor:pointer;
-    animation:spin 20s linear infinite;
-    transition: transform 0.1s;
+    animation:spin 30s linear infinite;
+    transition:transform 0.1s;
 }
 
-/* === mini santtus === */
-.mini-santtu {
-    width:20px;
-    margin:2px;
-    transition: transform 0.2s;
-}
-
+/* mini santtus */
 .mini-row {
     display:flex;
     flex-wrap:wrap;
@@ -80,15 +95,30 @@ h1, h2, h3 {
     margin-top:5px;
 }
 
+.mini-santtu {
+    width:25px;
+    margin:2px;
+    transition:transform 0.2s;
+}
+
+#mini-count {
+    margin-top:5px;
+    font-size:0.9rem;
+}
+
 /* === shop items === */
+#shop-items {
+    display:flex;
+    flex-direction:column;
+    width:95%;
+}
+
 .shop-item {
     background:#222;
-    margin:5px auto;
+    margin:5px 0;
     padding:10px;
     border-radius:5px;
     transition: transform 0.1s, box-shadow 0.2s;
-    width:90%;
-    max-width:400px;
 }
 
 .shop-item.disabled {
@@ -96,22 +126,27 @@ h1, h2, h3 {
     pointer-events:none;
 }
 
-.shop-item:hover:not(.disabled) {
-    transform:scale(1.03);
+.shop-item:hover:not(.disabled){
+    transform: scale(1.03);
     box-shadow:0 0 10px #ffb347;
 }
 
 /* === ranks === */
+#ranks-list {
+    width:95%;
+    display:flex;
+    flex-direction:column;
+}
+
 .rank-item {
     display:flex;
     align-items:center;
-    margin:5px auto;
-    padding:5px;
+    justify-content:space-between;
+    margin:5px 0;
+    padding:5px 10px;
     border-radius:5px;
     background:#222;
-    transition: transform 0.1s, background 0.2s;
-    width:90%;
-    max-width:400px;
+    transition: transform 0.1s;
 }
 
 .rank-item.current {
@@ -120,25 +155,28 @@ h1, h2, h3 {
 
 .rank-item img {
     width:40px;
+    height:40px;
     margin-right:10px;
-}
-
-.rank-item div {
-    margin-left:auto;
+    border-radius:50%;
 }
 
 /* === settings buttons === */
 #settings button {
-    margin:5px;
     padding:10px 20px;
-    cursor:pointer;
+    margin:5px;
     background:#222;
+    border:none;
     border-radius:5px;
-    transition: background 0.2s;
+    cursor:pointer;
+    width:90%;
+    max-width:300px;
+    text-align:center;
+    transition:background 0.2s, transform 0.1s;
 }
 
-#settings button:hover {
-    background:#333;
+#settings button:hover{
+    background:#444;
+    transform:scale(1.05);
 }
 
 /* === watermark === */
@@ -152,27 +190,20 @@ h1, h2, h3 {
 
 /* === animations === */
 @keyframes spin {
-    from { transform:rotate(0deg); }
-    to { transform:rotate(360deg); }
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
 }
 
-/* === responsive tweaks === */
-@media screen and (max-width:600px) {
+/* === responsive === */
+@media(max-width:480px){
     .tab-btn {
-        min-width:80px;
-        padding:8px 12px;
+        flex:1 1 40%;
+        font-size:0.9rem;
     }
-
     #santtu-btn {
-        max-width:90%;
+        max-width:50vw;
     }
-
     .mini-santtu {
-        width:16px;
-        margin:1px;
-    }
-
-    .shop-item, .rank-item {
-        width:95%;
+        width:20px;
     }
 }
