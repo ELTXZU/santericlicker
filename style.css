@@ -66,15 +66,24 @@ header {text-align:center; padding:10px;}
 
 .mini-count {text-align:center; margin-top:5px;}
 
-.shop-item, .rank-item {
+.shop-item {
     background:#222;
-    margin:5px;
+    margin:5px 0;
     padding:10px;
     border-radius:5px;
-    transition: transform 0.1s;
+    transition: transform 0.1s, box-shadow 0.2s;
+    transform-origin: center; /* add this */
 }
-.shop-item:hover:not(.disabled), .rank-item:hover {transform: scale(1.03);}
-.shop-item.disabled {opacity:0.5; pointer-events:none;}
+
+.shop-item.disabled {
+    opacity:0.5;
+    pointer-events:none;
+}
+
+.shop-item:hover:not(.disabled){
+    transform: scale(1.03);
+    box-shadow:0 0 10px #ffb347;
+}
 
 .rank-item {display:flex; align-items:center;}
 .rank-item.current {background:#444;}
