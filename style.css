@@ -110,5 +110,9 @@ body {
 @media(max-width:600px){
     #santtu-btn {width:150px;}
     .mini-santtu {width:25px;}
-    .shop-item{width:120px;}
+    .shop-item{
+        width:100px;       /* smaller for mobile */
+        padding:8px;       /* adjust padding */
+        font-size:0.8rem;  /* smaller text */
+    }
 }
