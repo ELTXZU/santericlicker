@@ -1,25 +1,127 @@
+/* reset & base */
+* {margin:0; padding:0; box-sizing:border-box;}
 body {
-    margin:0;
-    padding:0;
     font-family: Arial, sans-serif;
     background: #111;
     color: #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
 }
-header {text-align:center; padding:10px;}
-#santtu-container {display:flex; flex-direction:column; align-items:center; margin-top:20px;}
-#santtu-btn {width:120px; cursor:pointer; animation:spin 30s linear infinite; transition: transform 0.1s;}
-@keyframes spin {from{transform:rotate(0deg);} to{transform:rotate(360deg);}}
-.mini-santtu {width:30px; margin:2px; transition: transform 0.2s;}
-#mini-count {margin-top:5px;}
-.tabs {display:flex; justify-content:center; margin-top:20px;}
-.tab {padding:10px 20px; cursor:pointer; margin:0 5px; background:#222; border-radius:5px;}
-.tab.active {background:#444;}
-#content {margin:20px;}
-.shop-item {background:#222; margin:5px; padding:10px; border-radius:5px; transition: transform 0.1s;}
-.shop-item.disabled {opacity:0.5; pointer-events:none;}
-.shop-item:hover:not(.disabled){transform: scale(1.03);}
-.rank-item {display:flex; align-items:center; margin:5px 0; padding:5px; border-radius:5px; background:#222; transition: transform 0.1s;}
-.rank-item.current {background:#444;}
-.rank-item img {width:40px; margin-right:10px;}
-.rank-item div {margin-left:auto;}
-#watermark {position:fixed; bottom:5px; right:5px; color:#888; font-size:0.8em;}
+
+/* header */
+.header {
+    text-align: center;
+    padding: 20px 0;
+}
+.header h1 {
+    font-size: 2.2em;
+    color: #f0f0f0;
+    text-shadow: 0 0 10px #ff00ff;
+}
+#santtu-count {
+    font-size: 1.2em;
+    margin-top: 5px;
+    color: #ff77ff;
+}
+
+/* tabs */
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+.tab-btn {
+    padding: 10px 25px;
+    cursor: pointer;
+    background: #222;
+    border-radius: 10px;
+    border: none;
+    color: #eee;
+    font-weight: bold;
+    transition: 0.2s;
+}
+.tab-btn:hover {
+    background: #333;
+}
+.tab-btn.active {
+    background: #ff00ff;
+    color: #111;
+}
+
+/* tab content */
+.tab {
+    display: none;
+    margin-top: 30px;
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+}
+.tab.active-tab {
+    display: block;
+}
+
+/* santtu container */
+.santtu-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+#santtu-btn {
+    width: 150px;
+    cursor: pointer;
+    animation: spin 20s linear infinite;
+    transition: transform 0.1s;
+    border-radius: 50%;
+    box-shadow: 0 0 20px #ff00ff;
+}
+.mini-santtu {
+    width: 35px;
+    margin: 3px;
+    transition: transform 0.2s;
+}
+
+/* shop & ranks */
+.shop-item, .rank-item {
+    background: #222;
+    margin: 8px 0;
+    padding: 12px;
+    border-radius: 10px;
+    transition: transform 0.15s, background 0.2s;
+    display: flex;
+    align-items: center;
+}
+.shop-item:hover:not(.disabled), .rank-item:hover {
+    transform: scale(1.05);
+    background: #333;
+}
+.shop-item.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+.rank-item img {
+    width: 45px;
+    margin-right: 12px;
+}
+.rank-item.current {
+    background: #ff00ff;
+    color: #111;
+}
+
+/* watermark */
+#watermark {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    color: #888;
+    font-size: 0.85em;
+    font-style: italic;
+}
+
+/* spin animation */
+@keyframes spin {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+}
