@@ -74,7 +74,6 @@ function saveGame(){
     localStorage.setItem('lastActive', Date.now());
 }
 
-// === tab switching ===
 function showTab(tabId, btn){
     document.querySelectorAll('.tab').forEach(t => t.style.display='none');
     document.getElementById(tabId).style.display='block';
@@ -94,34 +93,48 @@ function getCurrentRank(){
     return rank;
 }
 
-// === update santtu display & mini santtus ===
 function updateMiniSanttu(){
     const container = document.querySelector('.santtu-container');
-    container.innerHTML = '';
-
     const rank = getCurrentRank();
-    const mainImg = document.createElement('img');
-    mainImg.id = "santtu-btn";
+
+    // check if main santtu btn exists, create once
+    let mainImg = document.getElementById('santtu-btn');
+    if(!mainImg){
+        mainImg = document.createElement('img');
+        mainImg.id = "santtu-btn";
+        mainImg.onclick = clickSanttu;
+        mainImg.style.animation = "spin 20s linear infinite";
+        container.appendChild(mainImg);
+    }
     mainImg.src = rank.img;
-    mainImg.onclick = clickSanttu;
-    mainImg.style.animation = "spin 20s linear infinite";
-    container.appendChild(mainImg);
+
+    // remove old mini santtus
+    const oldMiniRows = document.querySelectorAll('.mini-row');
+    oldMiniRows.forEach(r => r.remove());
 
     const miniCount = upgrades[0] || 0;
-    const maxDisplay = 50; // cap mini santtus for performance
+    const maxDisplay = 50; // cap for performance
     const displayCount = Math.min(miniCount, maxDisplay);
+    if(displayCount === 0){
+        document.getElementById('mini-count').innerText = "Mini Santtus: 0";
+        return;
+    }
 
-    const miniDiv = document.createElement('div');
-    miniDiv.style.display = 'flex';
-    miniDiv.style.flexWrap = 'wrap';
-    miniDiv.style.justifyContent = 'center';
+    // create mini santtus rows
+    const rowDiv = document.createElement('div');
+    rowDiv.className = "mini-row";
+    rowDiv.style.display = 'flex';
+    rowDiv.style.flexWrap = 'wrap';
+    rowDiv.style.justifyContent = 'center';
+
     for(let i=0; i<displayCount; i++){
         const mini = document.createElement('img');
         mini.src = rank.img;
         mini.className='mini-santtu';
-        miniDiv.appendChild(mini);
+        rowDiv.appendChild(mini);
     }
-    if(miniCount>0) container.appendChild(miniDiv);
+
+    container.appendChild(rowDiv);
     document.getElementById('mini-count').innerText = `Mini Santtus: ${miniCount}`;
 }
 
