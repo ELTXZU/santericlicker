@@ -1,21 +1,31 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     text-align: center;
-    background: #f2f2f2;
+    background: linear-gradient(135deg, #ffe8d6, #ffd6d6);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 }
 
 .header {
     margin-top: 20px;
 }
 
-#santtu-btn {
-    width: 200px;
-    cursor: pointer;
-    transition: transform 0.1s;
+#santtu-count {
+    font-size: 24px;
+    margin: 10px 0;
 }
 
-#santtu-btn:active {
-    transform: scale(0.95);
+#rank-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+#rank-img {
+    width: 80px;
+    transition: transform 0.5s ease-in-out;
 }
 
 .tabs {
@@ -26,28 +36,94 @@ body {
     padding: 10px 20px;
     margin: 0 5px;
     cursor: pointer;
+    border-radius: 10px;
+    border: none;
+    background: #ff7f50;
+    color: white;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+.tab-btn:active {
+    transform: scale(0.95);
 }
 
 .tab {
     margin-top: 20px;
+    min-height: 300px;
+}
+
+.santtu-container {
+    position: relative;
+    display: inline-block;
+    width: 220px;
+    height: 220px;
+}
+
+#santtu-btn {
+    width: 100%;
+    cursor: pointer;
+    transition: transform 0.1s;
+    border-radius: 50%;
+    animation: spin 20s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+}
+
+.mini-santtu {
+    position: absolute;
+    width: 40px;
+    pointer-events: none;
+    animation: float 5s infinite linear;
+}
+
+@keyframes float {
+    0% { transform: translate(0,0);}
+    50% { transform: translate(0,-20px);}
+    100% { transform: translate(0,0);}
+}
+
+#click-effect {
+    position: absolute;
+    pointer-events: none;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 200, 0, 0.7);
+    border-radius: 50%;
+    display: none;
+    transform: translate(-50%, -50%);
 }
 
 #shop-items {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    gap: 10px;
 }
 
 .shop-item {
-    border: 1px solid #aaa;
+    border: 2px solid #ff7f50;
+    border-radius: 15px;
     padding: 10px;
-    margin: 5px;
     width: 150px;
     text-align: center;
     background: white;
     cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+}
+.shop-item:hover {
+    transform: scale(1.05);
+    background: #ffe4c4;
 }
 .shop-item.disabled {
-    opacity: 0.5;
+    opacity: 0.4;
     cursor: not-allowed;
+}
+
+/* Mobile */
+@media(max-width:600px){
+    #santtu-btn { width: 150px; }
+    .mini-santtu { width: 25px; }
 }
