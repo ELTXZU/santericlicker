@@ -48,7 +48,7 @@ body {
     width:200px;
     cursor:pointer;
     border-radius:50%;
-    animation: slowspin 30s linear infinite linear;
+    animation: slowspin 30s linear infinite;
     transform-origin:center center;
     transition: transform 0.1s;
     box-shadow:0 4px 15px rgba(0,0,0,0.5);
@@ -69,7 +69,7 @@ body {
 }
 .mini-count { margin-top:5px; font-size:1rem; color:#ffb347; }
 
-/* shop items */
+/* shop */
 #shop-items { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; }
 .shop-item {
     border:2px solid #ff4d6d;
@@ -99,6 +99,8 @@ body {
 }
 .rank-item img { width:50px; border-radius:50%; }
 .rank-item.current { border: 2px solid #ffb347; background: #333; }
+
+#watermark { position:fixed; bottom:5px; right:10px; font-size:0.8rem; color: #888; }
 
 /* dev console modal */
 #devConsoleModal {
@@ -133,8 +135,6 @@ body {
     color:white;
     cursor:pointer;
 }
-
-#watermark { position:fixed; bottom:5px; right:10px; font-size:0.8rem; color: #888; }
 
 @media(max-width:600px){
     #santtu-btn {width:150px;}
