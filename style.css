@@ -33,50 +33,41 @@ body {
     font-weight:bold;
     transition: all 0.2s;
 }
-.tab-btn:hover {
-    transform: scale(1.05);
-    box-shadow:0 4px 10px rgba(0,0,0,0.5);
-}
+.tab-btn:hover { transform: scale(1.05); box-shadow:0 4px 10px rgba(0,0,0,0.5); }
 .tab-btn:active { transform: scale(0.95); }
 .tab { margin-top:20px; min-height:300px; }
 
 .santtu-container {
-    position:relative;
-    display:inline-block;
-    width:200px;
-    height:200px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
 }
+
 #santtu-btn {
-    width:100%;
+    width:200px;
     cursor:pointer;
     border-radius:50%;
-    animation: spin 20s linear infinite;
+    animation: slowspin 30s linear infinite; /* slow spin */
     transition: transform 0.1s;
     box-shadow:0 4px 15px rgba(0,0,0,0.5);
 }
-@keyframes spin {
+
+@keyframes slowspin {
     0%{transform:rotate(0deg);}
     100%{transform:rotate(360deg);}
 }
 
+/* mini santtus rows under main santtu */
 .mini-santtu {
-    position:absolute;
+    position:relative;
     width:35px;
     pointer-events:none;
-    transition: transform 0.2s;
+    margin:2px;
+    display:inline-block;
 }
 
-#click-effect {
-    position:absolute;
-    pointer-events:none;
-    font-weight:bold;
-    color:#ffb347;
-    display:none;
-    transform: translate(-50%,-50%);
-    font-size:1.2rem;
-}
-
-#shop-items { display:flex; flex-wrap:wrap; justify-content:center; gap:15px; }
+#shop-items { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; }
 .shop-item {
     border:2px solid #ff4d6d;
     border-radius:20px;
@@ -110,9 +101,5 @@ body {
 @media(max-width:600px){
     #santtu-btn {width:150px;}
     .mini-santtu {width:25px;}
-    .shop-item{
-        width:100px;       /* smaller for mobile */
-        padding:8px;       /* adjust padding */
-        font-size:0.8rem;  /* smaller text */
-    }
+    .shop-item{width:100px; padding:8px; font-size:0.8rem;}
 }
