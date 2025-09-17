@@ -138,6 +138,15 @@ function updateMiniSanttu(){
     document.getElementById('mini-count').innerText = `Mini Santtus: ${miniCount}`;
 }
 
+function getAutoPerSecond(){
+    let autoPerSecond = 0;
+    for(let i=0; i<upgrades.length; i++){
+        autoPerSecond += (upgrades[i]||0) * (shopList[i]?.autoBonus||0);
+    }
+    const boost = 1 + 0.01*prestigePoints;
+    return autoPerSecond * boost;
+}
+
 // === click santtu ===
 function getClickBoost(){
     let boost = 1;
@@ -217,9 +226,9 @@ setInterval(()=>{
     saveGame();
 },100);
 
-// === update display ===
 function updateDisplay(){
     document.getElementById('santtu-count').innerText = formatNumber(santtus) + " Santtus";
+    document.getElementById('auto-count').innerText = formatNumber(getAutoPerSecond()) + " Santtus/sec";
     updateMiniSanttu();
     renderShop();
     renderRanks();
