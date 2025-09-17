@@ -9,8 +9,8 @@ const ranks=[
   {name:"Gay Lanttu", img:"santtu.png", required:0},
   {name:"Based Santtu", img:"santtu1.png", required:10000},
   {name:"Lanttu God", img:"santtu2.png", required:500000},
-  {name:"Mega Lanttu", img:"santtu3.png", required:1e9},
-  {name:"Ultra Lanttu", img:"santtu4.png", required:1e12},
+  {name:"Mega Lanttu", img:"santtu3.png", required:100000000},
+  {name:"Ultra Lanttu", img:"santtu4.png", required:10000000000},
   {name:"Lanttu Overlord", img:"santtu5.png", required:1e36},
   {name:"Ultimate Lanttu", img:"santtu6.png", required:1e99}
 ];
