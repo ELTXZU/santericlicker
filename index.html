@@ -7,36 +7,37 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <div class="header">
     <h1>Santtu Clicker Ultra Deluxe</h1>
     <div id="santtu-count">0 Santtus</div>
 </div>
 
 <div class="tabs">
-    <button class="tab-btn" onclick="showTab('main')">Click</button>
-    <button class="tab-btn" onclick="showTab('shop')">Shop</button>
-    <button class="tab-btn" onclick="showTab('ranks')">Ranks</button>
-    <button class="tab-btn" onclick="showTab('settings')">Settings</button>
+    <button class="tab-btn active" onclick="showTab('main', this)">Click</button>
+    <button class="tab-btn" onclick="showTab('shop', this)">Shop</button>
+    <button class="tab-btn" onclick="showTab('ranks', this)">Ranks</button>
+    <button class="tab-btn" onclick="showTab('settings', this)">Settings</button>
 </div>
 
-<div id="main" class="tab">
+<div id="main" class="tab active-tab">
     <div class="santtu-container">
         <img id="santtu-btn" src="santtu.png" alt="Santtu" onclick="clickSanttu(event)">
     </div>
     <div id="mini-count" class="mini-count"></div>
 </div>
 
-<div id="shop" class="tab" style="display:none;">
+<div id="shop" class="tab">
     <h2>Shop</h2>
     <div id="shop-items"></div>
 </div>
 
-<div id="ranks" class="tab" style="display:none;">
+<div id="ranks" class="tab">
     <h2>Ranks</h2>
     <div id="ranks-list"></div>
 </div>
 
-<div id="settings" class="tab" style="display:none;">
+<div id="settings" class="tab">
     <h2>Settings</h2>
     <button onclick="resetGame()">Reset Game</button>
     <button onclick="prestige()">Prestige</button>
@@ -44,6 +45,5 @@
 
 <div id="watermark">made by eltxzu</div>
 
-<script src="script.js"></script>
 </body>
 </html>
