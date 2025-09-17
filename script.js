@@ -2,7 +2,7 @@
 // GAME DATA
 // ==========================
 let santtus = parseFloat(localStorage.getItem('santtus'))||0;
-let santtuPerClick = parseFloat(localStorage.getItem('santtuPerClick'))||1;
+let santtuPerClick = 3; // early game easier
 let upgrades = JSON.parse(localStorage.getItem('upgrades'))||[];
 let prestigePoints = parseInt(localStorage.getItem('prestige'))||0;
 
@@ -26,9 +26,9 @@ const prefixes=["Mini","Mega","Ultra","Quantum","Ludicrous","Galactic","Infinite
 const suffixes=["Factory","Machine","Wormhole","Dimension","Overload","Clone","Multiplier","Blast","Frenzy","Portal"];
 for(let i=0;i<100;i++){
     const name = prefixes[i%prefixes.length]+" "+suffixes[i%suffixes.length]+" #"+(i+1);
-    const baseCost = Math.floor(Math.pow(10, i*0.5+2)); // progressive cost
-    const cps = Math.floor(Math.pow(2, i*0.5)); // variety of cps
-    shopList.push({name:name, baseCost:baseCost, cps:cps, unlocked:i<3?true:false, feature:i%5}); // first 3 unlocked
+    const baseCost = Math.floor(Math.pow(10, i*0.5+2));
+    const cps = Math.floor(Math.pow(2, i*0.5));
+    shopList.push({name:name, baseCost:baseCost, cps:cps, unlocked:i<3?true:false, feature:i%5});
 }
 
 // ==========================
@@ -68,36 +68,51 @@ function clickEffect(e,value){
     effect.style.left=e.clientX+'px';
     effect.style.top=e.clientY+'px';
     effect.style.display='block';
-    setTimeout(()=>effect.style.display='none',300);
+    effect.style.transform="translate(-50%,-50%) scale(1.2)";
+    setTimeout(()=>{
+        effect.style.display='none';
+        effect.style.transform="translate(-50%,-50%) scale(1)";
+    },300);
 }
 
 // ==========================
 // CLICK SANTTU
 // ==========================
 function clickSanttu(e){
-    santtus += santtuPerClick;
-    clickEffect(e,santtuPerClick);
+    let boost = 1 + 0.01*prestigePoints;
+    santtus += santtuPerClick*boost;
+    bounceSanttu();
+    clickEffect(e,santtuPerClick*boost);
     updateDisplay();
     saveGame();
 }
 
 // ==========================
-// MINI SANTTU SYSTEM
+// BOUNCE EFFECT
+// ==========================
+function bounceSanttu(){
+    const santtu=document.getElementById('santtu-btn');
+    santtu.style.transform="scale(1.1)";
+    setTimeout(()=>{santtu.style.transform="scale(1)";},100);
+}
+
+// ==========================
+// MINI SANTTU ORBIT
 // ==========================
 function updateMiniSanttu(){
     const container=document.querySelector('.santtu-container');
     container.innerHTML='<img id="santtu-btn" src="'+getCurrentRank().img+'" onclick="clickSanttu(event)">';
     let miniCount = upgrades[0]||0;
-    let maxPerRow = 8;
-    let maxRows = 3;
-    let rowCount = Math.min(maxRows, Math.ceil(miniCount/maxPerRow));
+    let maxPerRow=8;
+    let maxRows=3;
+    let rowCount=Math.min(maxRows, Math.ceil(miniCount/maxPerRow));
     for(let r=0;r<rowCount;r++){
         for(let i=0;i<Math.min(maxPerRow, miniCount - r*maxPerRow);i++){
             const img=document.createElement('img');
             img.src=getCurrentRank().img;
             img.className='mini-santtu';
             let angle=(360/maxPerRow)*i*Math.PI/180;
-            let radius=80 + 20*r;
+            let radius=70+20*r;
             img.style.left=100 + radius*Math.cos(angle)+'px';
             img.style.top=100 + radius*Math.sin(angle)+'px';
             container.appendChild(img);
@@ -137,12 +152,21 @@ function renderShop(){
             btn.onclick=()=>{
                 santtus-=cost;
                 upgrades[index]=owned+1;
+                glowUpgrade(btn);
                 saveGame();
                 updateDisplay();
             }
         }
         shopDiv.appendChild(btn);
     });
+}
+
+// ==========================
+// GLOW EFFECT
+// ==========================
+function glowUpgrade(btn){
+    btn.style.boxShadow="0 0 20px #ffb347";
+    setTimeout(()=>{btn.style.boxShadow="0 4px 10px rgba(0,0,0,0.5)";},500);
 }
 
 // ==========================
@@ -168,7 +192,8 @@ setInterval(()=>{
     for(let i=0;i<upgrades.length;i++){
         autoClicks += (upgrades[i]||0)*(shopList[i]?.cps||0);
     }
-    santtus += autoClicks/10;
+    let boost = 1 + 0.01*prestigePoints;
+    santtus += autoClicks/10 * boost;
     updateDisplay();
     saveGame();
 },100);
@@ -179,7 +204,6 @@ setInterval(()=>{
 function resetGame(){
     if(confirm("Are u sure u wanna reset?")){
         santtus=0;
-        santtuPerClick=1;
         upgrades=[];
         updateDisplay();
         saveGame();
