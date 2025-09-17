@@ -156,14 +156,35 @@ function getClickBoost(){
     return boost;
 }
 
-function clickSanttu(){
-    const boost = 1 + 0.01*prestigePoints;
+function clickSanttu(e){
+    const boost = 1 + 0.01 * prestigePoints;
     const clickBoost = getClickBoost();
-    santtus += santtuPerClick * boost * clickBoost;
+    const gained = santtuPerClick * boost * clickBoost;
+    santtus += gained;
+
     bounceSanttu();
     updateDisplay();
     saveGame();
+
+    // show popup number at click position
+    if(e){ // make sure event exists
+        const popup = document.createElement('div');
+        popup.className = 'click-popup';
+        popup.innerText = `+${formatNumber(gained)}`;
+
+        // position relative to viewport
+        const rect = document.getElementById('app').getBoundingClientRect();
+        popup.style.left = (e.pageX - rect.left) + 'px';
+        popup.style.top = (e.pageY - rect.top) + 'px';
+
+        document.getElementById('app').appendChild(popup);
+
+        setTimeout(() => popup.remove(), 1000);
+    }
 }
+
+// make sure santtu-btn passes the click event
+document.getElementById('santtu-btn').addEventListener('click', clickSanttu);
 
 function bounceSanttu(){
     const circle = document.querySelector('.santtu-circle');
