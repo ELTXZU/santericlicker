@@ -200,16 +200,27 @@ function glowUpgrade(btn){
     setTimeout(()=>{btn.style.boxShadow="0 4px 10px rgba(0,0,0,0.5)";},500);
 }
 
-// === render ranks ===
+// === render ranks with needed santtus info ===
 function renderRanks(){
     const div = document.getElementById('ranks-list');
     div.innerHTML = '';
     const currentRank = getCurrentRank();
+
     ranks.forEach(rank=>{
         const progress = rank.required === 0 ? 100 : Math.min(100, (santtus/rank.required)*100);
+        const needed = rank.required > santtus ? formatNumber(rank.required - santtus) : 0;
+
         const item = document.createElement('div');
-        item.className = 'rank-item' + (currentRank.name===rank.name ? ' current' : '');
-        item.innerHTML = `<img src="${rank.img}"><span>${rank.name}</span><div>${Math.floor(progress)}%</div>`;
+        item.className = 'rank-item' + (currentRank.name === rank.name ? ' current' : '');
+        item.innerHTML = `
+            <img src="${rank.img}">
+            <span>${rank.name}</span>
+            <div>${Math.floor(progress)}%</div>
+            <div style="font-size:0.8rem; color:#ffb347;">
+                ${needed === 0 ? "Unlocked!" : `${needed} Santtus needed`}
+            </div>
+        `;
+
         div.appendChild(item);
     });
 }
