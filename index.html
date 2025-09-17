@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Santtu Clicker</title>
+<title>Santtu Clicker Ultra Deluxe</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="header">
-    <h1>Santtu Clicker</h1>
+    <h1>Santtu Clicker Ultra Deluxe</h1>
     <div id="santtu-count">0 Santtus</div>
 </div>
 
@@ -23,6 +23,7 @@
     <div class="santtu-container">
         <img id="santtu-btn" src="santtu.png" alt="Santtu" onclick="clickSanttu(event)">
     </div>
+    <div id="mini-count" class="mini-count">Mini Santtus: 0</div>
 </div>
 
 <div id="shop" class="tab" style="display:none;">
@@ -39,10 +40,20 @@
     <h2>Settings</h2>
     <button onclick="resetGame()">Reset Game</button>
     <button onclick="prestige()">Prestige</button>
+    <button onclick="openDevConsole()">Dev Console</button>
+</div>
+
+<!-- dev console modal -->
+<div id="devConsoleModal">
+    <h3>Dev Console</h3>
+    <input type="password" id="devPass" placeholder="Enter password">
+    <input type="text" id="devCommand" placeholder="Command e.g. set.santtu 1000">
+    <button onclick="executeDev()">Execute</button>
+    <button onclick="closeDevConsole()">Close</button>
+    <div id="devMsg" style="margin-top:5px;color:#ffb347;"></div>
 </div>
 
 <div id="watermark">made by eltxzu</div>
-
 <script src="script.js"></script>
 </body>
 </html>
