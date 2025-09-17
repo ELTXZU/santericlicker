@@ -63,29 +63,17 @@ body {
     position:absolute;
     width:35px;
     pointer-events:none;
-    animation: float 5s infinite linear;
-}
-@keyframes float {
-    0%{transform:translate(0,0);}
-    50%{transform:translate(0,-20px);}
-    100%{transform:translate(0,0);}
+    transition: transform 0.2s;
 }
 
 #click-effect {
     position:absolute;
     pointer-events:none;
-    width:40px;
-    height:40px;
-    background: rgba(255,200,0,0.8);
-    border-radius:50%;
+    font-weight:bold;
+    color:#ffb347;
     display:none;
     transform: translate(-50%,-50%);
-    animation: pop 0.3s forwards;
-}
-@keyframes pop {
-    0%{transform:scale(0);}
-    50%{transform:scale(1.2);}
-    100%{transform:scale(0);}
+    font-size:1.2rem;
 }
 
 #shop-items { display:flex; flex-wrap:wrap; justify-content:center; gap:15px; }
