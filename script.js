@@ -160,14 +160,14 @@ function bounceSanttu(){
     setTimeout(()=>{btn.style.transform='scale(1)';},100);
 }
 
-// mini santtus rows
+// mini santtus rows (up to 10)
 function updateMiniSanttu(){
     const container=document.querySelector('.santtu-container');
     container.innerHTML='<img id="santtu-btn" src="'+getCurrentRank().img+'" onclick="clickSanttu(event)">';
 
     let miniCount = upgrades[0]||0; // first upgrade controls mini santtus
     const maxPerRow = 8;
-    const maxRows = 3;
+    const maxRows = 10;
     let rowCount = Math.min(maxRows, Math.ceil(miniCount/maxPerRow));
 
     for(let r=0; r<rowCount; r++){
@@ -184,6 +184,8 @@ function updateMiniSanttu(){
         }
         container.appendChild(rowDiv);
     }
+
+    document.getElementById('mini-count').innerText = "Mini Santtus: " + miniCount;
 }
 
 // auto santtus
@@ -220,12 +222,12 @@ function prestige(){
     if(santtus>=1e12){
         let gained=Math.floor(Math.sqrt(santtus/1e12));
         prestigePoints+=gained;
-        alert(`U prestiged and got ${gained} prestige points!`);
+        alert(`U prestiged and got ${gained} prestige points 🙏`);
         santtus=0;
         upgrades=[];
         updateDisplay();
         saveGame();
-    }else alert("Need at least 1 trillion Santtus u broke boi");
+    }else alert("Need at least 1 trillion Santtus 😭");
 }
 
 // number formatting
@@ -237,6 +239,23 @@ function formatNumber(num){
         i++;
     }
     return num.toFixed(2)+suffixes[i];
+}
+
+// dev console
+function openDevConsole(){ document.getElementById('devConsoleModal').style.display='block'; }
+function closeDevConsole(){ document.getElementById('devConsoleModal').style.display='none'; }
+function executeDev(){
+    const pass = document.getElementById('devPass').value;
+    const cmd = document.getElementById('devCommand').value;
+    const msg = document.getElementById('devMsg');
+    if(pass !== 'eltxzuyuh'){ msg.innerText="Wrong password 😭"; return; }
+    try{
+        if(cmd.startsWith("set.santtu")){
+            let val=parseFloat(cmd.split(" ")[1]);
+            if(!isNaN(val)){ santtus=val; updateDisplay(); saveGame(); msg.innerText="Santtus set! 🙏"; }
+            else msg.innerText="Invalid value";
+        } else { msg.innerText="Unknown command"; }
+    }catch(e){ msg.innerText="Error: "+e; }
 }
 
 // init
