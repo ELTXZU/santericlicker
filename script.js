@@ -8,11 +8,18 @@ let prestigePoints = parseInt(localStorage.getItem('prestige')) || 0;
 const ranks=[
   {name:"Gay Lanttu", img:"santtu.png", required:0},
   {name:"Based Santtu", img:"santtu1.png", required:10000},
-  {name:"Lanttu God", img:"santtu2.png", required:500000},
-  {name:"Mega Lanttu", img:"santtu3.png", required:100000000},
-  {name:"Ultra Lanttu", img:"santtu4.png", required:10000000000},
-  {name:"Lanttu Overlord", img:"santtu5.png", required:1e36},
-  {name:"Ultimate Lanttu", img:"santtu6.png", required:1e99}
+  {name:"Bi Lanttu", img:"santtu2.png", required:500000},
+  {name:"Santtu Demon", img:"santtu7.png", required:5000000},
+  {name:"Straight Santtu", img:"santtu8.png", required:50000000},
+  {name:"Mega Lanttu", img:"santtu9.png", required:100000000},
+  {name:"Sensei Lanttu", img:"santtu10.png", required:250000000},
+  {name:"Giga Santtu", img:"santtu3.png", required:500000000},
+  {name:"Ultra Lanttu", img:"santtu4.png", required:1000000000},
+  {name:"Lanttu Overlord", img:"santtu11.png", required:10000000000},
+  {name:"Ultimate Lanttu", img:"santtu5.png", required:50000000000},
+  {name:"Lanttu himself", img:"santtu12.png", required:300000000000},
+  {name:"Universal Lanttu", img:"santtu13.png", required:1e40},
+  {name:"Santtu of all santtus", img:"santtu6.png", required:1e60}
 ];
 
 const shopList = [
@@ -315,7 +322,7 @@ function loadOfflineProgress(){
     const totalGain = autoPerSecond * boost * elapsed;
 
     if(totalGain>0){
-        alert(`💀 You gained ${formatNumber(totalGain)} Santtus while offline!`);
+        alert(`You gained ${formatNumber(totalGain)} Santtus while offline!`);
         santtus += totalGain;
     }
 }
