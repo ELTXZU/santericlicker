@@ -16,7 +16,6 @@ const ranks=[
 ];
 
 const shopList = [
-  {name:"Santtu Pointer", baseCost:50, clickBonus:1, autoBonus:0, unlocked:true, description:"Increase each click by 1 santtus."},
   {name:"Mini Santtu", baseCost:100, clickBonus:0, autoBonus:1, description:"Spawns 1 mini santtu per purchase, clicks automatically."},
   {name:"Santtu Multiplier", baseCost:500, clickBonus:2, autoBonus:0, description:"Increases each click by 2 santtus."},
   {name:"Lanttu Machine", baseCost:2000, clickBonus:0, autoBonus:1, description:"Generates 1 santtu automatically per second."},
