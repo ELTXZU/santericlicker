@@ -3,9 +3,11 @@ let santtus = parseFloat(localStorage.getItem('santtus')) || 0;
 let santtuPerClick = 3;
 let upgrades = JSON.parse(localStorage.getItem('upgrades')) || [];
 let prestigePoints = parseInt(localStorage.getItem('prestige')) || 0;
+let rankBoosts = parseFloat(localStorage.getItem('rankBoosts')) || 0;
+let lockedRank = localStorage.getItem('lockedRank') || "Gay Lanttu";
 
-// ranks
-const ranks=[
+// === ranks ===
+const ranks = [
   {name:"Gay Lanttu", img:"santtu.png", required:0},
   {name:"Based Santtu", img:"santtu1.png", required:10000},
   {name:"Bi Lanttu", img:"santtu2.png", required:500000},
@@ -78,9 +80,12 @@ function saveGame(){
     localStorage.setItem('santtus', santtus);
     localStorage.setItem('upgrades', JSON.stringify(upgrades));
     localStorage.setItem('prestige', prestigePoints);
+    localStorage.setItem('rankBoosts', rankBoosts);
+    localStorage.setItem('lockedRank', lockedRank);
     localStorage.setItem('lastActive', Date.now());
 }
 
+// === tabs ===
 function showTab(tabId, btn){
     document.querySelectorAll('.tab').forEach(t => t.style.display='none');
     document.getElementById(tabId).style.display='block';
@@ -90,21 +95,14 @@ function showTab(tabId, btn){
 
 // === current rank ===
 function getCurrentRank(){
-    let rank = ranks[0];
-    for(let i=ranks.length-1; i>=0; i--){
-        if(santtus >= ranks[i].required){
-            rank = ranks[i];
-            break;
-        }
-    }
-    return rank;
+    // always use lockedRank if exists
+    return ranks.find(r=>r.name===lockedRank) || ranks[0];
 }
 
 function updateMiniSanttu(){
     const container = document.querySelector('.santtu-container');
     const rank = getCurrentRank();
 
-    // check if main santtu btn exists, create once
     let mainImg = document.getElementById('santtu-btn');
     if(!mainImg){
         mainImg = document.createElement('img');
@@ -115,19 +113,17 @@ function updateMiniSanttu(){
     }
     mainImg.src = rank.img;
 
-    // remove old mini santtus
-    const oldMiniRows = document.querySelectorAll('.mini-row');
-    oldMiniRows.forEach(r => r.remove());
+    document.querySelectorAll('.mini-row').forEach(r => r.remove());
 
     const miniCount = upgrades[0] || 0;
-    const maxDisplay = 50; // cap for performance
+    const maxDisplay = 50;
     const displayCount = Math.min(miniCount, maxDisplay);
+
     if(displayCount === 0){
         document.getElementById('mini-count').innerText = "Mini Santtus: 0";
         return;
     }
 
-    // create mini santtus rows
     const rowDiv = document.createElement('div');
     rowDiv.className = "mini-row";
     rowDiv.style.display = 'flex';
@@ -140,58 +136,60 @@ function updateMiniSanttu(){
         mini.className='mini-santtu';
         rowDiv.appendChild(mini);
     }
+    if(miniCount > maxDisplay){
+        const moreText = document.createElement('span');
+        moreText.innerText = `+${miniCount - maxDisplay} more`;
+        moreText.style.color = '#ffb347';
+        moreText.style.fontSize = '0.9rem';
+        moreText.style.marginLeft = '10px';
+        rowDiv.appendChild(moreText);
+    }
 
     container.appendChild(rowDiv);
     document.getElementById('mini-count').innerText = `Mini Santtus: ${miniCount}`;
 }
 
+// === auto per sec & click boost ===
 function getAutoPerSecond(){
     let autoPerSecond = 0;
     for(let i=0; i<upgrades.length; i++){
         autoPerSecond += (upgrades[i]||0) * (shopList[i]?.autoBonus||0);
     }
-    const boost = 1 + 0.01*prestigePoints;
-    return autoPerSecond * boost;
+    const prestigeBoost = 1 + 0.05*prestigePoints;
+    const rankBoost = (lockedRank !== "Gay Lanttu") ? 1 + 0.02*rankBoosts : 1;
+    return autoPerSecond * prestigeBoost * rankBoost;
 }
 
-// === click santtu ===
 function getClickBoost(){
-    let boost = 1;
+    let boost = 0;
     for(let i=0; i<upgrades.length; i++){
         boost += (upgrades[i]||0) * (shopList[i]?.clickBonus||0);
     }
-    return boost;
+    const prestigeBoost = 1 + 0.05*prestigePoints;
+    const rankBoost = (lockedRank !== "Gay Lanttu") ? 1 + 0.02*rankBoosts : 1;
+    return (santtuPerClick + boost) * prestigeBoost * rankBoost;
 }
 
+// === click santtu ===
 function clickSanttu(e){
-    const boost = 1 + 0.01 * prestigePoints;
-    const clickBoost = getClickBoost();
-    const gained = santtuPerClick * boost * clickBoost;
+    const gained = getClickBoost();
     santtus += gained;
 
     bounceSanttu();
     updateDisplay();
     saveGame();
 
-    // show popup number at click position
-    if(e){ // make sure event exists
+    if(e){
         const popup = document.createElement('div');
         popup.className = 'click-popup';
         popup.innerText = `+${formatNumber(gained)}`;
-
-        // position relative to viewport
         const rect = document.getElementById('app').getBoundingClientRect();
         popup.style.left = (e.pageX - rect.left) + 'px';
         popup.style.top = (e.pageY - rect.top) + 'px';
-
         document.getElementById('app').appendChild(popup);
-
         setTimeout(() => popup.remove(), 1000);
     }
 }
-
-// make sure santtu-btn passes the click event
-document.getElementById('santtu-btn').addEventListener('click', clickSanttu);
 
 function bounceSanttu(){
     const circle = document.querySelector('.santtu-circle');
@@ -199,12 +197,12 @@ function bounceSanttu(){
     setTimeout(()=>{ circle.style.animation = "spin 10s linear infinite"; },300);
 }
 
-// === render shop ===
+// === shop ===
 function renderShop(){
     const shopDiv = document.getElementById('shop-items');
     shopDiv.innerHTML = '';
 
-    shopList.forEach((item, index)=>{
+    shopList.forEach((item,index)=>{
         let owned = upgrades[index] || 0;
         let cost = Math.floor(item.baseCost * Math.pow(1.15, owned));
         const btn = document.createElement('div');
@@ -228,7 +226,7 @@ function glowUpgrade(btn){
     setTimeout(()=>{btn.style.boxShadow="0 4px 10px rgba(0,0,0,0.5)";},500);
 }
 
-// === render ranks with needed santtus info ===
+// === ranks ===
 function renderRanks(){
     const div = document.getElementById('ranks-list');
     div.innerHTML = '';
@@ -248,9 +246,32 @@ function renderRanks(){
                 ${needed === 0 ? "Unlocked!" : `${needed} Santtus needed`}
             </div>
         `;
-
         div.appendChild(item);
     });
+
+    // === check rank up ===
+    let newRank = ranks[0];
+    for(let i=ranks.length-1;i>=0;i--){
+        if(santtus >= ranks[i].required && ranks[i].name !== "Gay Lanttu"){
+            newRank = ranks[i];
+            break;
+        }
+    }
+    if(ranks.find(r=>r.name===lockedRank).required < newRank.required){
+        lockedRank = newRank.name;
+        rankBoosts += 1; // +2% boost
+        localStorage.setItem('lockedRank', lockedRank);
+        localStorage.setItem('rankBoosts', rankBoosts);
+        showRankUpPopup(newRank.name);
+    }
+}
+
+function showRankUpPopup(rankName){
+    const popup = document.createElement('div');
+    popup.className = 'rank-up-popup';
+    popup.innerText = `Rank Up! ${rankName} +2% boost 🙏`;
+    document.getElementById('app').appendChild(popup);
+    setTimeout(()=> popup.remove(), 2500);
 }
 
 // === auto santtus ===
@@ -259,25 +280,19 @@ setInterval(()=>{
     for(let i=0;i<upgrades.length;i++){
         autoClicks += (upgrades[i]||0) * (shopList[i]?.autoBonus||0);
     }
-    const boost = 1 + 0.01*prestigePoints;
-    santtus += autoClicks / 10 * boost;
+    const gained = autoClicks/10 * (1 + 0.05*prestigePoints) * ((lockedRank!=="Gay Lanttu") ? 1+0.02*rankBoosts :1);
+    santtus += gained;
     updateDisplay();
     saveGame();
 },100);
-
-function updateDisplay(){
-    document.getElementById('santtu-count').innerText = formatNumber(santtus) + " Santtus";
-    document.getElementById('auto-count').innerText = formatNumber(getAutoPerSecond()) + " Santtus/sec";
-    updateMiniSanttu();
-    renderShop();
-    renderRanks();
-}
 
 // === reset / prestige ===
 function resetGame(){
     if(confirm("Are u sure u wanna reset?")){
         santtus=0;
         upgrades=[];
+        rankBoosts=0;
+        lockedRank="Gay Lanttu";
         updateDisplay();
         saveGame();
     }
@@ -292,10 +307,10 @@ function prestige(){
         upgrades = [];
         updateDisplay();
         saveGame();
-    }else alert("Need at least 1 trillion Santtus 😭");
+    } else alert("Need at least 1 trillion Santtus 😭");
 }
 
-// === number formatting ===
+// === formatting ===
 function formatNumber(num){
     const suffixes = ["","K","M","B","T","Qa","Qi","Sx","Sp","Oc","No","Dc"];
     let i=0;
@@ -318,7 +333,7 @@ function loadOfflineProgress(){
     for(let i=0;i<upgrades.length;i++){
         autoPerSecond += (upgrades[i]||0)*(shopList[i]?.autoBonus||0);
     }
-    const boost = 1 + 0.01*prestigePoints;
+    const boost = (1 + 0.05*prestigePoints) * ((lockedRank!=="Gay Lanttu") ? 1+0.02*rankBoosts :1);
     const totalGain = autoPerSecond * boost * elapsed;
 
     if(totalGain>0){
@@ -330,3 +345,4 @@ function loadOfflineProgress(){
 // === init ===
 loadOfflineProgress();
 updateDisplay();
+document.getElementById('santtu-btn')?.addEventListener('click', clickSanttu);
