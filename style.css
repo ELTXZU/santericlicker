@@ -105,19 +105,34 @@ main {
     transform-origin:center;
 }
 
+/* glow for rank-up */
+.santtu-boost-glow {
+    animation: boostGlow 1s ease-in-out 3 alternate;
+}
+
+@keyframes boostGlow {
+    0% { box-shadow: 0 0 20px #ffb347; }
+    100% { box-shadow: 0 0 50px #ffb347; }
+}
+
 /* mini santtus */
 .mini-row {
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
     margin-top:5px;
+    max-height:120px;
+    overflow-y:auto;
 }
 
 .mini-santtu {
     width:25px;
     margin:2px;
     transition:transform 0.2s;
+    animation: miniSpin 10s linear infinite;
 }
+
+@keyframes miniSpin { from { transform: rotate(0deg);} to {transform:rotate(360deg);} }
 
 #mini-count {
     margin-top:5px;
@@ -133,6 +148,7 @@ main {
     font-size: 1rem;
     animation: popupMove 1s ease forwards;
     text-shadow: 0 0 5px #fff;
+    z-index:1000;
 }
 
 /* === shop items === */
@@ -155,9 +171,11 @@ main {
     pointer-events:none;
 }
 
-.shop-item:hover:not(.disabled){
-    animation: bounce 0.3s ease;
+.shop-item:hover:not(.disabled),
+.shop-item:active:not(.disabled){
+    transform:scale(1.05);
     box-shadow:0 0 10px #ffb347;
+    animation: bounce 0.3s ease;
 }
 
 /* === ranks === */
@@ -180,6 +198,7 @@ main {
 
 .rank-item.current {
     background:#444;
+    border:2px solid #ffb347;
 }
 
 .rank-item img {
@@ -257,4 +276,9 @@ main {
         width:120px;
         height:120px;
     }
+}
+
+@media(max-width:360px){
+    .santtu-circle { width:100px; height:100px; }
+    #santtu-btn { max-width:80vw; }
 }
