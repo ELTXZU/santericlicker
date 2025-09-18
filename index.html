@@ -6,7 +6,7 @@
 <title>Santtu Clicker</title>
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-locked-rank="Gay Lanttu" data-rank-boosts="0">
 <div id="app">
     <header>
         <h1>Santtu Clicker</h1>
@@ -25,7 +25,7 @@
         <section id="main" class="tab active-tab">
             <div class="santtu-container">
                 <div class="santtu-circle">
-                    <img id="santtu-btn" src="santtu.png" alt="Santtu">
+                    <img id="santtu-btn" src="santtu.png" alt="Click the Santtu to gain Santtus">
                 </div>   
             </div>
             <div id="mini-count" class="mini-count"></div>
@@ -47,6 +47,9 @@
             <button id="prestige-btn">Prestige</button>
         </section>
     </main>
+
+    <!-- popup container for rank-up / click numbers -->
+    <div id="popup-container"></div>
 
     <div id="watermark">made by eltxzu</div>
 </div>
