@@ -85,20 +85,12 @@ function saveGame(){
     localStorage.setItem('lastActive', Date.now());
 }
 
-// === tabs ===
-function showTab(tabId, btn){
-    document.querySelectorAll('.tab').forEach(t => t.style.display='none');
-    document.getElementById(tabId).style.display='block';
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-}
-
 // === current rank ===
 function getCurrentRank(){
-    // always use lockedRank if exists
     return ranks.find(r=>r.name===lockedRank) || ranks[0];
 }
 
+// === mini santtu ===
 function updateMiniSanttu(){
     const container = document.querySelector('.santtu-container');
     const rank = getCurrentRank();
@@ -209,7 +201,7 @@ function renderShop(){
         btn.className = 'shop-item' + (santtus>=cost ? '' : ' disabled');
         btn.innerHTML = `<h3>${item.name}</h3><p>${item.description}</p><p>Cost: ${formatNumber(cost)}</p><p>Owned: ${owned}</p>`;
         if(santtus>=cost){
-            btn.onclick = ()=>{
+            btn.onclick = ()=>{ 
                 santtus -= cost;
                 upgrades[index] = owned+1;
                 glowUpgrade(btn);
@@ -272,6 +264,15 @@ function showRankUpPopup(rankName){
     popup.innerText = `Rank Up! ${rankName} +2% boost 🙏`;
     document.getElementById('app').appendChild(popup);
     setTimeout(()=> popup.remove(), 2500);
+}
+
+// === update display ===
+function updateDisplay(){
+    document.getElementById('santtu-count').innerText = `${formatNumber(santtus)} Santtus`;
+    document.getElementById('auto-count').innerText = `${formatNumber(getAutoPerSecond())} Santtus/sec`;
+    updateMiniSanttu();
+    renderShop();
+    renderRanks();
 }
 
 // === auto santtus ===
@@ -343,6 +344,8 @@ function loadOfflineProgress(){
 }
 
 // === init ===
-loadOfflineProgress();
-updateDisplay();
-document.getElementById('santtu-btn')?.addEventListener('click', clickSanttu);
+document.addEventListener('DOMContentLoaded', ()=>{
+    loadOfflineProgress();
+    updateDisplay();
+    document.getElementById('santtu-btn').addEventListener('click', clickSanttu);
+});
